@@ -1,5 +1,12 @@
 import { readdirSync } from "fs"
 // const ekDir = process.cwd() + "/plugins/commands/cache/explodingKittens"
+const info = {
+  name: "explodingKittens",
+  version: "0.0.1-alpha",
+  author: "Citnut",
+  rootRepo: "https://github.com/Citnut/xvagame"
+}
+export { info }
 export default function ({ ekDir }) {
   const imgDir = ekDir + "/img"
   const imgList = readdirSync(imgDir)
