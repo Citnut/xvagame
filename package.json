@@ -1,0 +1,21 @@
+{
+  "name": "xvagame",
+  "version": "0.0.1",
+  "description": "game repo",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Citnut/xvagame.git"
+  },
+  "keywords": [
+    "xvagame"
+  ],
+  "author": "Citnut",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Citnut/xvagame/issues"
+  },
+  "homepage": "https://github.com/Citnut/xvagame#readme"
+}
