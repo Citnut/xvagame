@@ -1,17 +1,17 @@
-import { readdirSync } from "fs"
+// import { readdirSync } from "fs"
 // const ekDir = process.cwd() + "/plugins/commands/cache/explodingKittens"
-const info = {
-  name: "explodingKittens",
-  version: "0.0.1-alpha",
-  author: "Citnut",
-  rootRepo: "https://github.com/Citnut/xvagame"
+function getArrDir({ dir, prefix, suffixes = ".png", len = 4 }) {
+  let rs = []
+  for (let i = 1; i <= len; i++) {
+    rs.push(`${dir}/${prefix}${i}${suffixes}`)
+  }
+  return rs
 }
-export { info }
 export default function ({ ekDir }) {
   const imgDir = ekDir + "/img"
-  const imgList = readdirSync(imgDir)
-  let wiki = readdirSync(ekDir + "/wiki")
-  for (let index = 0; index < wiki.length; index++) { wiki[index] = ekDir + "/" + wiki[index] }
+  // const imgList = readdirSync(imgDir)
+  const wikiDir = ekDir + "/wiki"
+  // for (let index = 0; index < wiki.length; index++) { wiki[index] = ekDir + "/" + wiki[index] }
   return {
     setupGame: {
       join: "meplay",
@@ -34,21 +34,22 @@ export default function ({ ekDir }) {
     sttInPlayerList: ["☄️", "🔥", "🎉", "🪦"],
     time: {
       reloadStatus: 3000,
-      NopeNoti: 9000
+      NopeNoti: 10000
     },
-    wiki,
-    imgDir,
+    wiki: getArrDir({ dir: wikiDir, prefix: "", suffixes: ".jpg", len: 2 }),
     img: {
-      d: imgList.slice(9, 15),
-      ek: imgList.slice(15, 19),
-      n: imgList.slice(23, 28),
-      a: imgList.slice(0, 4),
-      sk: imgList.slice(37, 41),
-      f: imgList.slice(19, 23),
-      sf: imgList.slice(33, 37),
-      se: imgList.slice(28, 33),
-      c: imgList.slice(4, 9),
+      d: getArrDir({ dir: ekDir, prefix: "d", len: 6 }),
+      ek: getArrDir({ dir: ekDir, prefix: "ek" }),
+      n: getArrDir({ dir: ekDir, prefix: "n", len: 5 }),
+      a: getArrDir({ dir: ekDir, prefix: "a" }),
+      sk: getArrDir({ dir: ekDir, prefix: "sk" }),
+      f: getArrDir({ dir: ekDir, prefix: "f" }),
+      sf: getArrDir({ dir: ekDir, prefix: "sf" }),
+      se: getArrDir({ dir: ekDir, prefix: "s", len: 5 }),
+      c: getArrDir({ dir: ekDir, prefix: "c", len: 5 })
     },
-    dev: true
+    dev: false,
+    getUserName: (uid) => global.data.users.get(uid).info.name,
+    // api: global.api
   }
 }
