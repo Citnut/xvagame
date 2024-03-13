@@ -121,7 +121,7 @@ class Card {
       const i = game.findPlayerByID({ ID: message.senderID, i: true })
       const { name, status } = game.players[i]
       if (status === state.DEAD) return
-      if (game.checkNope() && c) await this.nf({ game, name, card: config.Nope, end: async () => { await Game.n({ game, message, c: !c }) } })
+      if (game.checkNope() && c) await Card.nf({ game, name, card: config.Nope, end: async () => { await Game.n({ game, message, c: !c }) } })
       else {
         const ci = game.players[i].cards.findIndex(x => x.id === _enum.Nope)
         await game.that.sendMessage({
@@ -134,7 +134,7 @@ class Card {
   }
   static async a({ game, message, c = true, ci }) {
     const { name, cards } = game.getCurrentPlayer()
-    if (game.checkNope() && c) await this.nf({ game, name, card: config.Attack, ci, end: async () => await Card.a({ game, message, c: !c, ci }) })
+    if (game.checkNope() && c) await Card.nf({ game, name, card: config.Attack, ci, end: async () => await Card.a({ game, message, c: !c, ci }) })
     else {
       if (game.victim.ID === message.senderID && game.victim.turn === 1) {
         game.clearVT()
@@ -156,7 +156,7 @@ class Card {
   }
   static async sk({ game, message, c = true, ci }) {
     const { name, cards } = game.getCurrentPlayer()
-    if (game.checkNope() && c) await this.nf({ game, name, card: config.Skip, ci, end: async () => await Card.sk({ game, message, c: !c, ci }) })
+    if (game.checkNope() && c) await Card.nf({ game, name, card: config.Skip, ci, end: async () => await Card.sk({ game, message, c: !c, ci }) })
     else {
       if (game.getCurrentPlayer().cards.find(c => c.id === _enum.ExplodingKittens)) await message.reply(game.that.getLang("citnut.ek.cnu"))
       else {
@@ -181,7 +181,7 @@ class Card {
     const cl = game.getCardsListOfPlayers(ID)
     e.unsend()
     const ib = await game.that.send(game.that.getLang("citnut.ek.FavorIb", { name, l: cl }), ID)
-    ib.addReplyEvent({ callback: this.callbackBOF, ek: { m, cl, ib, ID, name, cards, game, ci } })
+    ib.addReplyEvent({ callback: Card.callbackBOF, ek: { m, cl, ib, ID, name, cards, game, ci } })
   }
   static async callbackBOF({ message, eventData }) {
     chose = getChose(message.body)
@@ -208,7 +208,7 @@ class Card {
   }
   static async f({ game, message, c = true, ci }) {
     const { name, cards } = game.getCurrentPlayer()
-    if (game.checkNope() && c) await this.nf({ game, name, card: config.Favor, ci, end: async () => await Card.f({ game, message, c: !c, ci }) })
+    if (game.checkNope() && c) await Card.nf({ game, name, card: config.Favor, ci, end: async () => await Card.f({ game, message, c: !c, ci }) })
     else {
       let l = ""
       let _l = []
@@ -217,12 +217,12 @@ class Card {
         l += `[${i + 1}] ${game.players[i].name} <${game.players[i].cards.length}>\n`
       }
       const e = await message.reply(game.that.getLang("citnut.ek.Favor", { l }))
-      e.addReplyEvent({ callback: this.callbackAOF, ek: { name, game, e, _l, cards, ci } })
+      e.addReplyEvent({ callback: Card.callbackAOF, ek: { name, game, e, _l, cards, ci } })
     }
   }
   static async sf({ game, message, c = true, ci }) {
     const { name, cards } = game.getCurrentPlayer()
-    if (game.checkNope() && c) await this.nf({ game, name, card: config.Shuffle, ci, end: async () => await Card.sf({ game, message, c: !c, ci }) })
+    if (game.checkNope() && c) await Card.nf({ game, name, card: config.Shuffle, ci, end: async () => await Card.sf({ game, message, c: !c, ci }) })
     else {
       game.desk = shuffle(game.desk)
       game.players[game.alive[game.index]].cards.splice(ci, 1)
@@ -234,7 +234,7 @@ class Card {
   }
   static async se({ game, message, c = true, ci }) {
     const { name, cards } = game.getCurrentPlayer()
-    if (game.checkNope() && c) await this.nf({ game, name, card: config.See, ci, end: async () => await Card.se({ game, message, c: !c, ci }) })
+    if (game.checkNope() && c) await Card.nf({ game, name, card: config.See, ci, end: async () => await Card.se({ game, message, c: !c, ci }) })
     else {
       await game.that.sendMessage({
         body: game.that.getLang("citnut.ek.Noti", { name, card: config.See }),
@@ -265,7 +265,7 @@ class Card {
     for (let i = 0; i < lms.length; i += 4) { ms.push(lms.slice(i, i + 4).join(" ")) }
     e.unsend()
     const r = await m.reply(game.that.getLang("citnut.ek.CatChoseCard", { name: p.name, l: ms.join("\n") }))
-    r.addReplyEvent({ callback: this.callbackBOC, ek: { lms, r, game, name, cards, ci } })
+    r.addReplyEvent({ callback: Card.callbackBOC, ek: { lms, r, game, name, cards, ci } })
   }
   static async callbackBOC({ message, eventData }) {
     chose = getChose(message.body)
@@ -292,7 +292,7 @@ class Card {
       cit = card.findIndex(i => i.bid === cards[ci].bid)
     }
     if (cit === -1) await message.reply(game.that.getLang("citnut.ek.CatNguErr", { card: cards[ci].name }))
-    else if (game.checkNope() && c) await this.nf({ game, name, card: config.Cats, ci, end: async () => await Card.c({ game, message, c: !c, cit, ci }) })
+    else if (game.checkNope() && c) await Card.nf({ game, name, card: config.Cats, ci, end: async () => await Card.c({ game, message, c: !c, cit, ci }) })
     else {
       let l = "", _l = []
       for (let i = 0; i < game.alive.length; i++) {
@@ -301,7 +301,7 @@ class Card {
         l += `[${i + 1}] ${game.players[i].name} <${game.players[i].cards.length}>\n`
       }
       const e = await message.reply(game.that.getLang("citntu.ek.CatChosePlayer", { l }))
-      e.addReplyEvent({ callback: this.callbackAOC, ek: { _l, game, e, name, cards, ci } })
+      e.addReplyEvent({ callback: Card.callbackAOC, ek: { _l, game, e, name, cards, ci } })
     }
   }
 }
@@ -405,11 +405,8 @@ class Game {
         this.players[this.alive[this.index]].cards = cards.sort((a, b) => a.id - b.id)
         this.players[this.alive[this.index]].cards = cards.sort((a, b) => a.id === b.id ? a.name.localeCompare(b.name) : 0)
         this.e = await this.that.sendMessage(this.that.getLang("citnut.ek.yourTurn", { cards: this.getCardsListOfPlayers(ID), pass: config.pass }), ID)
-      } catch (e) {
-        console.log(e)
-        process.exit(888)
-      }
-      this.task = !this.task
+        this.task = !this.task
+      } catch { console.log }
     }
     const { name } = this.players.splice(this.index, 1)
     let list = ""
