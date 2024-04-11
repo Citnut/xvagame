@@ -53,7 +53,7 @@ class Card {
     }
     return res
   }
-  static async ek(game, ID) {
+  static async ek({ game, ID }) {
     const { name, cards } = game.getCurrentPlayer()
     const gek = cards.find(x => x.id === _enum.ExplodingKittens)
     const d = game.that.funMsg[Math.floor(Math.random() * (game.that.funMsg.length - 1))]
@@ -112,7 +112,7 @@ class Card {
       m ? Card.n({ game, message: m, ci: nc }) : end()
     })
   }
-  static callbackON({game, usedCard, name}){
+  static callbackON({ game, usedCard, name }) {
     game.that.sendMessage({
       body: game.that.getLang("citnut.ek.usta") + game.that.getLang("citnut.ek.Noti", { name, card: config.Nope }),
       attachment: cache.get(usedCard.a)
@@ -120,18 +120,18 @@ class Card {
   }
   static async n({ game, message, c = true, call = false, ci }) {
     if (call) return message.reply(game.that.getLang("citnut.ek.cnu"))
-    const usedCard = game.players[i].cards.splice(ci, 1)
+    const usedCard = game.players[i].cards.splice(ci, 1)[0]
     const i = game.findPlayerByID({ ID: message.senderID, i: true })
     const { name, status } = game.players[i]
     if (status === state.DEAD) return
-    if (game.checkNope() && c) await Card.nf({ game, name, card: config.Nope, end: async () => { this.callbackON({game, usedCard, name}) } })
+    if (game.checkNope() && c) await Card.nf({ game, name, card: config.Nope, end: async () => { this.callbackON({ game, usedCard, name }) } })
     else {
-      this.callbackON({game, usedCard, name})
+      this.callbackON({ game, usedCard, name })
     }
   }
   static async a({ game, message, c = true, ci }) {
     const { name } = game.getCurrentPlayer()
-    const usedCard = c ? game.players[game.alive[game.index]].cards.splice(ci, 1) : ci
+    const usedCard = c ? game.players[game.alive[game.index]].cards.splice(ci, 1)[0] : ci
     if (game.checkNope() && c) await Card.nf({ game, name, card: config.Attack, end: async () => await Card.a({ game, message, c: !c, ci: usedCard }) })
     else {
       if (game.victim.ID === message.senderID && game.victim.turn === 1) {
@@ -153,7 +153,7 @@ class Card {
   }
   static async sk({ game, message, c = true, ci }) {
     const { name } = game.getCurrentPlayer()
-    const usedCard = c ? game.players[game.alive[game.index]].cards.splice(ci, 1) : ci
+    const usedCard = c ? game.players[game.alive[game.index]].cards.splice(ci, 1)[0] : ci
     if (game.checkNope() && c) await Card.nf({ game, name, card: config.Skip, end: async () => await Card.sk({ game, message, c: !c, ci: usedCard }) })
     else {
       if (game.getCurrentPlayer().cards.find(c => c.id === _enum.ExplodingKittens)) await message.reply(game.that.getLang("citnut.ek.cnu"))
@@ -200,7 +200,7 @@ class Card {
   }
   static async f({ game, message, c = true, ci }) {
     const { name } = game.getCurrentPlayer()
-    const usedCard = c ? game.players[game.alive[game.index]].cards.splice(ci, 1) : ci
+    const usedCard = c ? game.players[game.alive[game.index]].cards.splice(ci, 1)[0] : ci
     if (game.checkNope() && c) await Card.nf({ game, name, card: config.Favor, end: async () => await Card.f({ game, message, c: !c, ci: usedCard }) })
     else {
       let l = ""
@@ -219,7 +219,7 @@ class Card {
   }
   static async sf({ game, message, c = true, ci }) {
     const { name } = game.getCurrentPlayer()
-    const usedCard = c ? game.players[game.alive[game.index]].cards.splice(ci, 1) : ci
+    const usedCard = c ? game.players[game.alive[game.index]].cards.splice(ci, 1)[0] : ci
     if (game.checkNope() && c) await Card.nf({ game, name, card: config.Shuffle, end: async () => await Card.sf({ game, message, c: !c, ci: usedCard }) })
     else {
       game.shuffleCards()
@@ -231,7 +231,7 @@ class Card {
   }
   static async se({ game, message, c = true, ci }) {
     const { name } = game.getCurrentPlayer()
-    const usedCard = c ? game.players[game.alive[game.index]].cards.splice(ci, 1) : ci
+    const usedCard = c ? game.players[game.alive[game.index]].cards.splice(ci, 1)[0] : ci
     if (game.checkNope() && c) await Card.nf({ game, name, card: config.See, end: async () => await Card.se({ game, message, c: !c, ci: usedCard }) })
     else {
       await game.that.sendMessage({
@@ -272,7 +272,7 @@ class Card {
   }
   static async c({ game, message, c = true, cit = false, ci }) {
     const { name, cards, ID } = game.getCurrentPlayer()
-    const usedCard = c ? game.players[game.alive[game.index]].cards.splice(ci, 1) : ci
+    const usedCard = c ? game.players[game.alive[game.index]].cards.splice(ci, 1)[0] : ci
     if (!cit) {
       let card = cards
       card.splice(ci, 1)
