@@ -33,23 +33,25 @@ export default function ({ ekDir }) {
     Cats: " (Mèo cùi bắp)",
     sttInPlayerList: ["☄️", "🔥", "🎉", "🪦"],
     time: {
-      reloadStatus: 3000,
-      NopeNoti: 10000
+      reloadStatus: 5 * 1000,
+      NopeNoti: 15 * 1000,
+      nextTurn: 2 * 60 * 1000
     },
     wiki: getArrDir({ dir: wikiDir, prefix: "", suffixes: ".jpg", len: 2 }),
     img: {
-      d: getArrDir({ dir: ekDir, prefix: "d", len: 6 }),
-      ek: getArrDir({ dir: ekDir, prefix: "ek" }),
-      n: getArrDir({ dir: ekDir, prefix: "n", len: 5 }),
-      a: getArrDir({ dir: ekDir, prefix: "a" }),
-      sk: getArrDir({ dir: ekDir, prefix: "sk" }),
-      f: getArrDir({ dir: ekDir, prefix: "f" }),
-      sf: getArrDir({ dir: ekDir, prefix: "sf" }),
-      se: getArrDir({ dir: ekDir, prefix: "s", len: 5 }),
-      c: getArrDir({ dir: ekDir, prefix: "c", len: 5 })
+      d: getArrDir({ dir: imgDir, prefix: "d", len: 6 }),
+      ek: getArrDir({ dir: imgDir, prefix: "ek" }),
+      n: getArrDir({ dir: imgDir, prefix: "n", len: 5 }),
+      a: getArrDir({ dir: imgDir, prefix: "a" }),
+      sk: getArrDir({ dir: imgDir, prefix: "sk" }),
+      f: getArrDir({ dir: imgDir, prefix: "f" }),
+      sf: getArrDir({ dir: imgDir, prefix: "sf" }),
+      se: getArrDir({ dir: imgDir, prefix: "s", len: 5 }),
+      c: getArrDir({ dir: imgDir, prefix: "c", len: 5 })
     },
     dev: false,
     getUserName: (uid) => global.data.users.get(uid).info.name,
     // api: global.api
   }
 }
+

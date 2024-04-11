@@ -205,11 +205,15 @@ const _gameClass = {
 }
 global.gameClass = _gameClass
 global.gameManager = new GameManager()
+global.gameUtil = {
+  timer: async time => new Promise(resolve => { setTimeout(() => { resolve() }, time) })
+}
+if (!global.gameLoader) global.gameLoader = []
 const config = {
   name: "game",
   aliases: ["gm"],
   description: "Chơi game\nHiện tại gồm các game: " + (global.gameManager?.getList().join(", ") ?? "..."),
-  usage: "<game>",
+  usage: "<game | reload>",
   cooldown: 3,
   permissions: [0, 1, 2],
   credits: "Citnut convert kb2abotv3"
@@ -218,11 +222,11 @@ const config = {
 const langData = {
   "vi_VN": {
     "citnut.game.errLoadGame": "Không thể tạo game {gameName}\nLời nhắn: {estack}",
-    "citnut.game.errFindGame": "Không tìm thấy game nào có tên {gameName}!\n\nList các game:\n- {list}"
+    "citnut.game.errFindGame": "Danh sách các game:\n- {list}"
   },
   "en_US": {
     "citnut.game.errLoadGame": "Cannot create game {gameName}\nmsg: {estack}",
-    "citnut.game.errFindGame": "No game were found named {gameName}!\n\nList game:\n- {list}"
+    "citnut.game.errFindGame": "List game:\n- {list}"
   }
 }
 /**
@@ -231,8 +235,8 @@ const langData = {
  */
 function onLoad() {
   if (!existsSync(global.pluginsPath + "/onMessage/gameListener.js")) {
-    writeFileSync(global.pluginsPath + "/onMessage/gameListener.js", 
-`export default async function ({ message }) {
+    writeFileSync(global.pluginsPath + "/onMessage/gameListener.js",
+      `export default async function ({ message }) {
   if (global.gameManager.items.length == 0) return
   for (const game of global.gameManager.items) {
     if (game.threadID === message.threadID || !message.isGroup) {
@@ -243,9 +247,16 @@ function onLoad() {
     )
   }
 }
-async function onCall({ message, args, getLang }) {
-  const gameName = message.args[1]
-  if (global.gameManager.isValid(gameName)) {
+async function onCall({ message, args, getLang, r = false }) {
+  const gameName = r ? "" : message.args[1]
+  if (gameName == "reload") {
+    if (global.gameLoader.length === 0) return
+    for (const loader of global.gameLoader) {
+      try { loader() } catch { console.log }
+    }
+    await onCall({ message, args, getLang, r: !r })
+  }
+  else if (global.gameManager.isValid(gameName)) {
     try {
       const thread = message.isGroup ? await global.controllers.Threads.get(message.threadID) || {} : {}
       global.gameManager.run(gameName, {
@@ -263,11 +274,12 @@ async function onCall({ message, args, getLang }) {
         "estack": e.stack
       }))
     }
-  } else
+  } else {
     return message.reply(getLang("citnut.game.errFindGame", {
       "gameName": gameName,
       "list": global.gameManager.getList().join("\n- ")
     }))
+  }
 }
 export default {
   config,
