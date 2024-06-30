@@ -21,7 +21,7 @@ class Manager {
     this.items.splice(0, this.items.length);
   }
 
-  find(query, options) {
+  find(query, options = {}) {
     const returnIndex = Boolean(
       ((typeof options == 'object') ? options.returnIndex : false) || false
     );
@@ -248,11 +248,13 @@ function onLoad() {
   }
 }
 async function onCall({ message, args, getLang, r = false }) {
-  const gameName = r ? "" : message.args[1]
+  const gameName = r ? "" : message.args[1];
   if (gameName == "reload") {
-    if (global.gameLoader.length === 0) return
+    if (global.gameLoader.length === 0) return;
+    global.gameManager.items = [];
+    global.gameManager.games = [];
     for (const loader of global.gameLoader) {
-      try { loader() } catch { console.log }
+      try { await loader() } catch { console.log }
     }
     await onCall({ message, args, getLang, r: !r })
   }
