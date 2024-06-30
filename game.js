@@ -240,7 +240,7 @@ function onLoad() {
   if (global.gameManager.items.length == 0) return
   for (const game of global.gameManager.items) {
     if (game.threadID === message.threadID || !message.isGroup) {
-      try { await game.onMessage(message, message.reply) } catch { console.log }
+      try { await game.onMessage({message, reply:message.reply}) } catch { console.log }
     }
   }
 }`
